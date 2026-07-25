@@ -23,6 +23,8 @@ Before each task report, confirm the server still responds; restart it and repos
 
 **Commit and push after each completed task.** Verify the change works, commit with a single-line message, push. Do not ask permission and do not end a task with "say the word if you want it committed"; that costs the user a round trip, and pushing is how they review diffs in the GitHub mobile app. Branching default: substantial or risky work goes on a working branch, small fixes go straight to the default branch. An explicit user preference ("work on main", "always branch") overrides this for the session.
 
+**Never open a pull request as an inferred default.** Pushing commits so the user can review diffs is not the same as opening a PR — a PR is a separate, visible action (notifications, a public artifact on the repo) that GitHub has no way to fully delete once created, only close. When a branch's work is done, ask how to wrap it up (merge locally, push and open a PR, leave the branch as-is, or discard it) and wait for the answer, even though that costs a round trip. Only skip the ask if the user already said which of those they want.
+
 **Verify with evidence.** Before reporting a task done, run the relevant tests or build and exercise the change for real (hit the endpoint, load the page). Report one line of evidence (test count, HTTP status). Never ask the user to check something you can check yourself.
 
 **Never point at the local filesystem.** The user cannot open files by path. In order of preference: inline short content directly; link pushed files via `https://github.com/<owner>/<repo>/blob/<branch>/<path>` (derived from the origin remote); if the file is not on the remote yet and is too long to inline, push first, then link. Use raw.githubusercontent.com links only for large plain-text files the blob view truncates, and only on public repos (check with `gh repo view --json visibility`); raw links 404 on private repos and never render HTML or SVG. To show rendered HTML, the tailnet-served dev server is the viewer. If the remote is not GitHub, inline the relevant excerpt.
@@ -43,3 +45,4 @@ If a reply contains any of these, fix it before sending:
 - "Let me know if you want this committed." Commit and push, then report.
 - A local file path the user is expected to open.
 - A question the user must answer with a typed paragraph.
+- A pull request opened without the user having explicitly chosen that over merging, leaving the branch as-is, or discarding it.
